@@ -1,4 +1,6 @@
-# 2.0.6
+> From 2.1.0 on, releases are made with [uppt](https://github.com/danielroe/uppt) and their notes are published on [GitHub Releases](https://github.com/bussmann-io/autodisco/releases).
+
+# 2.1.0
 - Fixed request bodies being sent as `[object Object]` instead of JSON
 - Fixed paths with multiple methods overwriting each other in the OpenAPI document
 - Fixed colliding type names overwriting and corrupting generated files

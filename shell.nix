@@ -5,5 +5,6 @@ pkgs.mkShell {
         pkgs.nodejs
         pkgs.pnpm
         pkgs.git
+        pkgs.gh
     ];
 }

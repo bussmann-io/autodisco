@@ -2,7 +2,7 @@
   "name": "autodisco",
   "type": "module",
   "version": "2.0.6",
-  "packageManager": "pnpm@11.22.0",
+  "packageManager": "pnpm@12.6.0",
   "description": "Automatically generate OpenAPI schemas by probing RESTful APIs",
   "author": "Frederik Bußmann <frederik@bussmann.io>",
   "license": "MIT",
@@ -36,7 +36,6 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "prepack": "pnpm run build",
-    "release": "pnpm run test && npm publish && git push --follow-tags",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
     "test:cleanup": "rm -r ./test/.outputs",
@@ -46,23 +45,24 @@
     "openapi-typescript": "^7.13.0"
   },
   "dependencies": {
-    "c12": "^3.3.4",
+    "c12": "^4.0.0-rc.2",
     "citty": "^0.2.2",
     "consola": "^3.4.2",
     "defu": "^6.1.7",
-    "hookable": "^6.1.1",
+    "hookable": "^6.1.2",
+    "jiti": "^2.7.0",
     "ufo": "^1.6.4",
-    "zod": "^4.4.3",
-    "zod-openapi": "^6.0.1"
+    "zod": "^4.6.5",
+    "zod-openapi": "^6.0.2"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^9.3.0",
-    "@types/node": "^26.2.0",
-    "@vitest/coverage-v8": "^4.1.10",
-    "eslint": "^10.8.1",
-    "knip": "^6.32.2",
-    "obuild": "^0.4.38",
+    "@antfu/eslint-config": "^9.5.1",
+    "@types/node": "^26.6.3",
+    "@vitest/coverage-v8": "^5.0.2",
+    "eslint": "^10.11.0",
+    "knip": "^6.38.0",
+    "obuild": "^0.4.40",
     "typescript": "^6.0.3",
-    "vitest": "^4.1.10"
+    "vitest": "^5.0.2"
   }
 }
