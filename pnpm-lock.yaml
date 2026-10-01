@@ -239,7 +239,7 @@ importers:
         version: 6.38.0
       obuild:
         specifier: ^0.4.40
-        version: 0.4.40(jiti@2.7.0)(magicast@0.5.5)(oxc-resolver@11.24.2)(typescript@6.0.3)
+        version: 0.4.43(jiti@2.7.0)(magicast@0.5.5)(oxc-resolver@11.24.2)(typescript@6.0.3)
       typescript:
         specifier: ^6.0.3
         version: 6.0.3
@@ -1219,26 +1219,6 @@ packages:
     resolution: {integrity: sha512-JCWSCdun+4Ovd9BhM/Vtlmwb7oD6Wl4YiPRXXwhAuwlPhW1un/MKgXn7GZoFm53ginnoNzus69V8JWx0K393jg==}
     engines: {node: '>=18.20'}
 
-  c12@4.0.0-rc.1:
-    resolution: {integrity: sha512-08UYGAVLTLqgiCzWNMNdBHdiWKzhIVwcapySI11mFTBacL5bP0dj1Vr7IcwOH0wcUTgMzm1VCh+by922viKWig==}
-    peerDependencies:
-      chokidar: ^5
-      dotenv: '*'
-      giget: '>=3.1.0'
-      jiti: '*'
-      magicast: '*'
-    peerDependenciesMeta:
-      chokidar:
-        optional: true
-      dotenv:
-        optional: true
-      giget:
-        optional: true
-      jiti:
-        optional: true
-      magicast:
-        optional: true
-
   c12@4.0.0-rc.2:
     resolution: {integrity: sha512-Qfc/XXsG5yyQZRm2asHeemRRbK5zmo3D+enxiNrJZs6i6zbl9CMj7Wr0lvYGq84txPNAsUKJfe3ea2Rva8h/eA==}
     peerDependencies:
@@ -2135,8 +2115,8 @@ packages:
     resolution: {integrity: sha512-5vvB5+W7ePv+p3uqxi+RcW1XAzLW0/hxt3/4X4Lc4qHudzOhmBiBwOY6DRob4WnanAEGvNcLjF+KNOufrUoEQw==}
     engines: {node: '>=12.20.0'}
 
-  obuild@0.4.40:
-    resolution: {integrity: sha512-7S9gGoKr0TOUNTpIvppwZ9hAtujcqnED80fVEVzTdZzUyziLUIiyFnH0vU2MO1Q0zDknMRExbXHGAH99LLhc+Q==}
+  obuild@0.4.43:
+    resolution: {integrity: sha512-X2ubzvjIfJ8mnzSbqvMAtXQU92b2l8Q+G+B7D3bEI9VUEZqvvZTwr4tI1Jd41VaPBPyVVK09tddf5Ga8TAwUFg==}
     hasBin: true
 
   openapi-typescript@7.13.0:
@@ -3412,18 +3392,6 @@ snapshots:
 
   builtin-modules@5.4.0: {}
 
-  c12@4.0.0-rc.1(jiti@2.7.0)(magicast@0.5.5):
-    dependencies:
-      confbox: 0.3.1
-      defu: 6.1.7
-      exsolve: 1.1.1
-      pathe: 2.0.3
-      pkg-types: 2.3.3
-      rc9: 3.1.0
-    optionalDependencies:
-      jiti: 2.7.0
-      magicast: 0.5.5
-
   c12@4.0.0-rc.2(jiti@2.7.0)(magicast@0.5.5):
     dependencies:
       confbox: 0.3.1
@@ -4490,9 +4458,9 @@ snapshots:
 
   obug@3.0.0: {}
 
-  obuild@0.4.40(jiti@2.7.0)(magicast@0.5.5)(oxc-resolver@11.24.2)(typescript@6.0.3):
+  obuild@0.4.43(jiti@2.7.0)(magicast@0.5.5)(oxc-resolver@11.24.2)(typescript@6.0.3):
     dependencies:
-      c12: 4.0.0-rc.1(jiti@2.7.0)(magicast@0.5.5)
+      c12: 4.0.0-rc.2(jiti@2.7.0)(magicast@0.5.5)
       consola: 3.4.2
       defu: 6.1.7
       exsolve: 1.1.1
@@ -4506,7 +4474,6 @@ snapshots:
       - '@typescript/native-preview'
       - '@volar/typescript'
       - '@vue/language-core'
-      - chokidar
       - dotenv
       - giget
       - jiti
