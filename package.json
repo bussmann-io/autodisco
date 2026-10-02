@@ -62,7 +62,7 @@
     "eslint": "^10.11.0",
     "knip": "^6.38.0",
     "obuild": "^0.4.40",
-    "typescript": "^6.0.3",
+    "typescript": "^7.0.0",
     "vitest": "^5.0.2"
   }
 }
