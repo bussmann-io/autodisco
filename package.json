@@ -2,7 +2,7 @@
   "name": "autodisco",
   "type": "module",
   "version": "2.1.0",
-  "packageManager": "pnpm@12.15.0",
+  "packageManager": "pnpm@12.16.1",
   "description": "Automatically generate OpenAPI schemas by probing RESTful APIs",
   "author": "Frederik Bußmann <frederik@bussmann.io>",
   "license": "MIT",
@@ -45,7 +45,7 @@
     "openapi-typescript": "^7.13.0"
   },
   "dependencies": {
-    "c12": "^4.0.0-rc.3",
+    "c12": "^4.0.0-rc.4",
     "citty": "^0.2.2",
     "consola": "^3.4.2",
     "defu": "^6.1.7",
@@ -57,10 +57,10 @@
   },
   "devDependencies": {
     "@antfu/eslint-config": "^9.5.1",
-    "@types/node": "^26.6.5",
+    "@types/node": "^26.6.6",
     "@vitest/coverage-v8": "^5.0.5",
     "eslint": "^10.13.0",
-    "knip": "^6.42.1",
+    "knip": "^6.44.0",
     "obuild": "^0.4.45",
     "typescript": "^6.0.3",
     "vitest": "^5.0.5"
