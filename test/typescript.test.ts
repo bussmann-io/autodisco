@@ -192,4 +192,56 @@ describe('typescript type generation', () => {
     expect(schemaContent).toContain('"kind": "facet.b"')
     expect(schemaContent).not.toContain('"kind": string')
   })
+
+  it('should keep every element type of mixed-type arrays', async () => {
+    const { baseUrl, outputDir } = getTestBaseConfig()
+
+    await discover({
+      baseUrl,
+      outputDir,
+      probes: {
+        get: {
+          '/mixed-null': {},
+          '/mixed-obj': {},
+        },
+      },
+      generate: {
+        typescript: true,
+      },
+    })
+
+    const mixedNull = await readFile(`${outputDir}/typescript/get/MixedNull.ts`, 'utf-8')
+    const mixedObj = await readFile(`${outputDir}/typescript/get/MixedObj.ts`, 'utf-8')
+
+    // ["a", null] must not collapse to string[]
+    expect(mixedNull).toBe('export type MixedNull = (string | null)[];')
+
+    // [{ "a": 1 }, 2] must not collapse to { "a": number }[]
+    expect(mixedObj.replace(/\s+/g, ' ')).toBe('export type MixedObj = ({ "a": number } | number)[];')
+  })
+
+  it('should infer arrays that start with null', async () => {
+    const { baseUrl, outputDir } = getTestBaseConfig()
+
+    await discover({
+      baseUrl,
+      outputDir,
+      probes: {
+        get: {
+          '/null-first': {},
+          '/nested-null-first': {},
+        },
+      },
+      generate: {
+        typescript: true,
+      },
+    })
+
+    // A leading null must not abort inference and drop the endpoint from the outputs
+    const nullFirst = await readFile(`${outputDir}/typescript/get/NullFirst.ts`, 'utf-8')
+    const nestedNullFirst = await readFile(`${outputDir}/typescript/get/NestedNullFirst.ts`, 'utf-8')
+
+    expect(nullFirst).toMatch(/^export type NullFirst = \((?:null \| string|string \| null)\)\[\];$/)
+    expect(nestedNullFirst).toMatch(/"items": \((?:null \| string|string \| null)\)\[\]/)
+  })
 })

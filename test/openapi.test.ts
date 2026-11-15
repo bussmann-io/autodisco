@@ -220,4 +220,26 @@ describe('openapi schema generation', () => {
     const typesFileContent = await readFile(`${outputDir}/openapi/types.d.ts`, 'utf-8')
     expect(typesFileContent).toBeDefined()
   })
+
+  it('should not drop endpoints with arrays that start with null', async () => {
+    const { baseUrl, outputDir } = getTestBaseConfig()
+
+    await discover({
+      baseUrl,
+      outputDir,
+      probes: {
+        get: {
+          '/null-first': {},
+          '/nested-null-first': {},
+        },
+      },
+    })
+
+    const schemaContent = await readFile(`${outputDir}/openapi/schema.json`, 'utf-8')
+    const schemaJson = JSON.parse(schemaContent)
+
+    expect(Object.keys(schemaJson.paths)).toEqual(['/null-first', '/nested-null-first'])
+    expect(schemaJson).toHaveProperty('components.schemas.GetNullFirst.type', 'array')
+    expect(schemaJson).toHaveProperty('components.schemas.GetNestedNullFirst.properties.items.type', 'array')
+  })
 })

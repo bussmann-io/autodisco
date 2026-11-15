@@ -199,6 +199,34 @@ export default function createTestAPI(port = 3456) {
       return
     }
 
+    // GET /mixed-null - Array of a string and null (tests that no element type is dropped)
+    if (method === 'GET' && url === '/mixed-null') {
+      res.writeHead(200)
+      res.end(JSON.stringify(['a', null]))
+      return
+    }
+
+    // GET /mixed-obj - Array of an object and a number (tests that non-object elements are kept)
+    if (method === 'GET' && url === '/mixed-obj') {
+      res.writeHead(200)
+      res.end(JSON.stringify([{ a: 1 }, 2]))
+      return
+    }
+
+    // GET /null-first - Array whose first element is null
+    if (method === 'GET' && url === '/null-first') {
+      res.writeHead(200)
+      res.end(JSON.stringify([null, 'a']))
+      return
+    }
+
+    // GET /nested-null-first - Object with a nested array whose first element is null
+    if (method === 'GET' && url === '/nested-null-first') {
+      res.writeHead(200)
+      res.end(JSON.stringify({ items: [null, 'a'] }))
+      return
+    }
+
     // POST /users - Create user
     if (method === 'POST' && url === '/users') {
       readBody(req).then(() => {

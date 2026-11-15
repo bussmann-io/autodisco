@@ -1,4 +1,5 @@
 import { readFile, stat } from 'node:fs/promises'
+import { resolve } from 'node:path'
 import { describe, expect, it } from 'vitest'
 
 import discover from '../src/index'
@@ -182,5 +183,39 @@ describe('zod schema generation', () => {
     expect(schemaContent).toContain('"kind": z.literal("document")')
     expect(schemaContent).toContain('"kind": z.literal("facet.a")')
     expect(schemaContent).toContain('"kind": z.literal("facet.b")')
+  })
+
+  it.each([
+    ['/mixed-null', 'MixedNull'],
+    ['/mixed-obj', 'MixedObj'],
+    ['/null-first', 'NullFirst'],
+    ['/nested-null-first', 'NestedNullFirst'],
+  ])('should generate a schema that accepts the mixed-type array response of %s', async (path, name) => {
+    const { baseUrl, outputDir } = getTestBaseConfig()
+
+    let response: unknown
+
+    await discover({
+      baseUrl,
+      outputDir,
+      probes: {
+        get: {
+          [path]: {},
+        },
+      },
+      generate: {
+        zod: true,
+      },
+      hooks: {
+        'probe:response': (_method, _path, _probeConfig, body) => {
+          response = JSON.parse(body)
+        },
+      },
+    })
+
+    // Load the generated schema file and validate the response it was inferred from
+    const { [name]: schema } = await import(resolve(outputDir, 'zod', 'get', `${name}.ts`))
+
+    expect(schema.parse(response)).toEqual(response)
   })
 })
