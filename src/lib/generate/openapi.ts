@@ -35,12 +35,20 @@ function getName(schemaResult: SchemaResult, names: Map<string, string>) {
  */
 function getParams(params?: Record<string, string | number | boolean>, optional = false) {
   const parsedParams = Object.entries(params || {}).reduce((acc, [key, value]) => {
-    const o = (v: z.ZodType) => optional ? v.optional() : v
-    acc[key] = typeof value === 'string' ? o(z.string()) : typeof value === 'number' ? o(z.number()) : o(z.boolean())
+    const o = (v: z.ZodType) => optional
+      ? v.optional()
+      : v
+    acc[key] = typeof value === 'string'
+      ? o(z.string())
+      : typeof value === 'number'
+        ? o(z.number())
+        : o(z.boolean())
     return acc
   }, {} as Record<string, z.ZodType>)
 
-  return Object.keys(parsedParams).length ? z.object(parsedParams) : undefined
+  return Object.keys(parsedParams).length
+    ? z.object(parsedParams)
+    : undefined
 }
 
 /**
@@ -99,30 +107,43 @@ function getPaths(schemaResults: SchemaResult[], config: ParsedDiscoverConfig, n
 
     const params = getParams(schemaResult.config.params)
     const query = getParams(schemaResult.config.query, true)
-    const headers = getParams({ ...config.headers, ...schemaResult.config.headers }, true)
+    const headers = getParams({
+      ...config.headers,
+      ...schemaResult.config.headers,
+    }, true)
 
     paths[schemaResult.path] = {
       ...paths[schemaResult.path],
 
       [method.toLowerCase()]: {
         ...(params || query || headers
-          ? { requestParams: {
-              ...(params ? { path: params } : {}),
-              ...(query ? { query } : {}),
-              ...(headers ? { headers } : {}),
-            } }
+          ? {
+              requestParams: {
+                ...(params
+                  ? { path: params }
+                  : {}),
+                ...(query
+                  ? { query }
+                  : {}),
+                ...(headers
+                  ? { headers }
+                  : {}),
+              },
+            }
           : {}),
 
         ...(schemaResult.bodySchema
-          ? { requestBody: {
-              content: {
-                'application/json': {
-                  schema: {
-                    $ref: `#/components/schemas/${name}RequestBody`,
+          ? {
+              requestBody: {
+                content: {
+                  'application/json': {
+                    schema: {
+                      $ref: `#/components/schemas/${name}RequestBody`,
+                    },
                   },
                 },
               },
-            } }
+            }
           : {}),
 
         responses: {

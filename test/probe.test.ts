@@ -42,7 +42,10 @@ describe('probe request bodies', () => {
   })
 
   it('should send array bodies as JSON', async () => {
-    const echoed = await probeEcho([{ id: 1 }, { id: 2 }])
+    const echoed = await probeEcho([
+      { id: 1 },
+      { id: 2 },
+    ])
 
     expect(echoed.body).toBe('[{"id":1},{"id":2}]')
     expect(echoed.contentType).toBe('application/json')
@@ -81,7 +84,9 @@ describe('probe hooks', () => {
       headers: { 'X-Global': 'global' },
       probes: {
         get: {
-          '/users': { headers: { 'X-Probe': 'probe' } },
+          '/users': {
+            headers: { 'X-Probe': 'probe' },
+          },
         },
       },
       hooks: {

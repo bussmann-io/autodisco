@@ -5,28 +5,40 @@ type Language = 'typescript' | 'zod'
 const pad = (indent: string, depth: number): string => indent.repeat(depth)
 
 function writeString(lang: Language): string {
-  return lang === 'zod' ? 'z.string()' : 'string'
+  return lang === 'zod'
+    ? 'z.string()'
+    : 'string'
 }
 
 function writeNumber(lang: Language): string {
-  return lang === 'zod' ? 'z.number()' : 'number'
+  return lang === 'zod'
+    ? 'z.number()'
+    : 'number'
 }
 
 function writeBoolean(lang: Language): string {
-  return lang === 'zod' ? 'z.boolean()' : 'boolean'
+  return lang === 'zod'
+    ? 'z.boolean()'
+    : 'boolean'
 }
 
 function writeNull(lang: Language): string {
-  return lang === 'zod' ? 'z.null()' : 'null'
+  return lang === 'zod'
+    ? 'z.null()'
+    : 'null'
 }
 
 function writeUnknown(lang: Language): string {
-  return lang === 'zod' ? 'z.unknown()' : 'unknown'
+  return lang === 'zod'
+    ? 'z.unknown()'
+    : 'unknown'
 }
 
 function writeLiteral(value: string | number | boolean | null, lang: Language): string {
   const serialized = JSON.stringify(value)
-  return lang === 'zod' ? `z.literal(${serialized})` : serialized
+  return lang === 'zod'
+    ? `z.literal(${serialized})`
+    : serialized
 }
 
 function writeOptional(
@@ -35,7 +47,9 @@ function writeOptional(
   lang: Language,
   indent: string,
 ): string {
-  return `${writeNode(element, depth, lang, indent)}${lang === 'zod' ? '.optional()' : ' | undefined'}`
+  return `${writeNode(element, depth, lang, indent)}${lang === 'zod'
+    ? '.optional()'
+    : ' | undefined'}`
 }
 
 function writeObject(
@@ -47,7 +61,9 @@ function writeObject(
   const inner = depth + 1
   const props = properties
     .map(({ key, value }) => `${pad(indent, inner)}"${key}": ${writeNode(value, inner, lang, indent)}`)
-    .join(`${lang === 'zod' ? ',' : ''}\n`)
+    .join(`${lang === 'zod'
+      ? ','
+      : ''}\n`)
 
   return lang === 'zod'
     ? `z.object({\n${props}\n${pad(indent, depth)}})`
@@ -92,10 +108,16 @@ function writeUnion(
         return Array.from(unique.values())
       })()
 
-  const inner = lang === 'zod' ? depth + 1 : depth
+  const inner = lang === 'zod'
+    ? depth + 1
+    : depth
   const opts = normalizedOptions
-    .map(option => (lang === 'zod' ? pad(indent, inner) : '') + writeNode(option, inner, lang, indent))
-    .join(lang === 'zod' ? ',\n' : ' | ')
+    .map(option => (lang === 'zod'
+      ? pad(indent, inner)
+      : '') + writeNode(option, inner, lang, indent))
+    .join(lang === 'zod'
+      ? ',\n'
+      : ' | ')
 
   return lang === 'zod'
     ? discriminator.length > 0

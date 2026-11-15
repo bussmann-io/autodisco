@@ -15,7 +15,9 @@ describe('type name collisions', () => {
       probes: {
         get: {
           '/users': {},
-          '/users/{id}': { params: { id: 1 } },
+          '/users/{id}': {
+            params: { id: 1 },
+          },
         },
       },
     })
@@ -35,7 +37,9 @@ describe('type name collisions', () => {
       probes: {
         get: {
           '/users': {},
-          '/users/{id}': { params: { id: 1 } },
+          '/users/{id}': {
+            params: { id: 1 },
+          },
         },
       },
     })
@@ -64,7 +68,9 @@ describe('type name collisions', () => {
       probes: {
         get: {
           '/users': {},
-          '/users/{id}': { params: { id: 1 } },
+          '/users/{id}': {
+            params: { id: 1 },
+          },
         },
       },
     })
@@ -84,7 +90,11 @@ describe('type name collisions', () => {
       generate: { typescript: true },
       probes: {
         get: { '/users': {} },
-        post: { '/users': { body: { name: 'Jane Doe' } } },
+        post: {
+          '/users': {
+            body: { name: 'Jane Doe' },
+          },
+        },
       },
     })
 
@@ -102,7 +112,11 @@ describe('multiple methods on one path', () => {
       outputDir,
       probes: {
         get: { '/users': {} },
-        post: { '/users': { body: { name: 'Jane Doe' } } },
+        post: {
+          '/users': {
+            body: { name: 'Jane Doe' },
+          },
+        },
       },
     })
 

@@ -26,8 +26,16 @@ const httpHeadersSchema = z.record(z.string(), z.string())
  * Schema for a specific probe endpoint configuration
  */
 const probeConfigSchema = z.object({
-  params: z.record(z.string(), z.union([z.string(), z.number(), z.boolean()])).optional(),
-  query: z.record(z.string(), z.union([z.string(), z.number(), z.boolean()])).optional(),
+  params: z.record(z.string(), z.union([
+    z.string(),
+    z.number(),
+    z.boolean(),
+  ])).optional(),
+  query: z.record(z.string(), z.union([
+    z.string(),
+    z.number(),
+    z.boolean(),
+  ])).optional(),
   headers: httpHeadersSchema.optional(),
   body: z.any().optional(),
   discriminators: z.array(z.string()).optional().or(z.boolean()),
@@ -42,17 +50,25 @@ const discoverConfigSchema = z.object({
   headers: httpHeadersSchema.optional(),
   probes: z.partialRecord(
     httpMethodSchema,
-    z.record(z.string(), z.union([probeConfigSchema, z.array(probeConfigSchema)])),
+    z.record(z.string(), z.union([
+      probeConfigSchema,
+      z.array(probeConfigSchema),
+    ])),
   ),
   generate: z.object({
     openapi: z.object({
-      typescript: z.union([z.boolean(), z.record(z.string(), z.unknown())]).optional(),
+      typescript: z.union([
+        z.boolean(),
+        z.record(z.string(), z.unknown()),
+      ]).optional(),
     }).or(z.boolean()).optional(),
     json: z.boolean().optional(),
     zod: z.boolean().optional(),
     markdown: z.union([
       z.boolean(),
-      z.object({ timestamp: z.boolean().optional() }),
+      z.object({
+        timestamp: z.boolean().optional(),
+      }),
     ]).optional(),
     typescript: z.boolean().optional(),
   }).optional(),

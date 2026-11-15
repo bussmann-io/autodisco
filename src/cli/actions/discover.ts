@@ -37,7 +37,9 @@ function parseJsonArg(value: string | undefined, name: string) {
   }
   catch (error) {
     throw new Error(
-      `Invalid JSON passed to --${name}: ${error instanceof Error ? error.message : String(error)}`,
+      `Invalid JSON passed to --${name}: ${error instanceof Error
+        ? error.message
+        : String(error)}`,
       { cause: error },
     )
   }
@@ -66,7 +68,9 @@ export async function runFromConfig(args: Pick<DiscoverArgs, 'configPath'>) {
   let cwd = process.cwd()
 
   if (args.configPath && args.configPath.length > 0) {
-    const targetPath = isAbsolute(args.configPath) ? args.configPath : resolve(cwd, args.configPath)
+    const targetPath = isAbsolute(args.configPath)
+      ? args.configPath
+      : resolve(cwd, args.configPath)
 
     if (existsSync(targetPath)) {
       const stats = statSync(targetPath)
@@ -127,7 +131,9 @@ export async function runFromCliArgs(args: DiscoverArgs) {
     }
   }
   catch (error) {
-    log.error(error instanceof Error ? error.message : error)
+    log.error(error instanceof Error
+      ? error.message
+      : error)
 
     process.exitCode = 1
   }
@@ -142,7 +148,9 @@ export async function runFromArgs(args: Omit<DiscoverArgs, 'configPath'>) {
     return
   }
 
-  const generateArgs = args.generate ? args.generate.split(',').map(arg => arg.trim()) : []
+  const generateArgs = args.generate
+    ? args.generate.split(',').map(arg => arg.trim())
+    : []
 
   const { baseUrl, path } = splitEndpoint(args.path)
 
@@ -164,11 +172,21 @@ export async function runFromArgs(args: Omit<DiscoverArgs, 'configPath'>) {
       ? {
           openapi: generateArgs.includes('openapi-typescript')
             ? { typescript: true }
-            : generateArgs.includes('openapi') ? true : undefined,
-          typescript: generateArgs.includes('typescript') ? true : undefined,
-          json: generateArgs.includes('json') ? true : undefined,
-          zod: generateArgs.includes('zod') ? true : undefined,
-          markdown: generateArgs.includes('markdown') ? true : undefined,
+            : generateArgs.includes('openapi')
+              ? true
+              : undefined,
+          typescript: generateArgs.includes('typescript')
+            ? true
+            : undefined,
+          json: generateArgs.includes('json')
+            ? true
+            : undefined,
+          zod: generateArgs.includes('zod')
+            ? true
+            : undefined,
+          markdown: generateArgs.includes('markdown')
+            ? true
+            : undefined,
         }
       : undefined,
   }

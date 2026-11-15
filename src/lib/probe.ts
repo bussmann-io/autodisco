@@ -38,7 +38,9 @@ function serializeBody(body: unknown, headers: Record<string, string> = {}) {
 
   return {
     body: JSON.stringify(body),
-    headers: hasContentType ? headers : { ...headers, 'Content-Type': 'application/json' },
+    headers: hasContentType
+      ? headers
+      : { ...headers, 'Content-Type': 'application/json' },
   }
 }
 
@@ -71,8 +73,12 @@ function createProbes(config: ParsedDiscoverConfig) {
 
       const response = await fetch(joinURL(parsedProbeConfig.baseUrl ?? '', resolvePath(path, parsedProbeConfig)), {
         method,
-        ...(body !== undefined ? { body } : {}),
-        ...(Object.keys(headers).length > 0 ? { headers } : {}),
+        ...(body !== undefined
+          ? { body }
+          : {}),
+        ...(Object.keys(headers).length > 0
+          ? { headers }
+          : {}),
       }).then(async (response) => {
         if (!response.ok) {
           config.logger.error(

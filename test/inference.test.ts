@@ -13,12 +13,14 @@ const config = discoverConfigSchemaWithDefaults.parse({ probes: {} })
  * @returns The inferred schema, or undefined if inference failed
  */
 async function inferSchema(...samples: unknown[]) {
-  const [result] = await parseSchemas([{
-    method: 'get',
-    path: '/sample',
-    config: { discriminators: true },
-    samples: samples.map(sample => JSON.stringify(sample)),
-  }], config)
+  const [result] = await parseSchemas([
+    {
+      method: 'get',
+      path: '/sample',
+      config: { discriminators: true },
+      samples: samples.map(sample => JSON.stringify(sample)),
+    },
+  ], config)
 
   return result?.schema
 }
@@ -30,12 +32,52 @@ describe('schema inference', () => {
   // schema such as z.unknown() does not count as a fix.
   describe('arrays with mixed element types', () => {
     it.each([
-      { sample: ['a', null], rejects: [1] },
-      { sample: [{ a: 1 }, 2], rejects: ['a'] },
-      { sample: [{ a: 1 }, null], rejects: ['a'] },
-      { sample: [1, 'a'], rejects: [true] },
-      { sample: [[1], ['a']], rejects: [[true]] },
-      { sample: [{ tags: ['a'] }, { tags: [1] }], rejects: [{ tags: [true] }] },
+      {
+        sample: ['a', null],
+        rejects: [1],
+      },
+      {
+        sample: [
+          { a: 1 },
+          2,
+        ],
+        rejects: ['a'],
+      },
+      {
+        sample: [
+          { a: 1 },
+          null,
+        ],
+        rejects: ['a'],
+      },
+      {
+        sample: [1, 'a'],
+        rejects: [true],
+      },
+      {
+        sample: [
+          [1],
+          ['a'],
+        ],
+        rejects: [
+          [true],
+        ],
+      },
+      {
+        sample: [
+          {
+            tags: ['a'],
+          },
+          {
+            tags: [1],
+          },
+        ],
+        rejects: [
+          {
+            tags: [true],
+          },
+        ],
+      },
     ])('should infer a schema that accepts $sample', async ({ sample, rejects }) => {
       const schema = await inferSchema(sample)
 
@@ -47,9 +89,25 @@ describe('schema inference', () => {
 
   describe('arrays that start with null', () => {
     it.each([
-      { sample: [null, 'a'], rejects: [1] },
-      { sample: [null, { a: 1 }], rejects: ['a'] },
-      { sample: { items: [null, 'a'] }, rejects: { items: [1] } },
+      {
+        sample: [null, 'a'],
+        rejects: [1],
+      },
+      {
+        sample: [
+          null,
+          { a: 1 },
+        ],
+        rejects: ['a'],
+      },
+      {
+        sample: {
+          items: [null, 'a'],
+        },
+        rejects: {
+          items: [1],
+        },
+      },
     ])('should infer a schema that accepts $sample', async ({ sample, rejects }) => {
       const schema = await inferSchema(sample)
 
@@ -62,7 +120,14 @@ describe('schema inference', () => {
   describe('endpoints with multiple probes', () => {
     it('should merge array responses from every probe', async () => {
       // e.g. the same list endpoint probed with different query parameters
-      const samples = [[{ id: 1 }], [{ id: 2, title: 'b' }]]
+      const samples = [
+        [
+          { id: 1 },
+        ],
+        [
+          { id: 2, title: 'b' },
+        ],
+      ]
 
       const schema = await inferSchema(...samples)
 

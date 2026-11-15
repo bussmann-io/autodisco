@@ -8,8 +8,12 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { runFromArgs, runFromCliArgs, runFromConfig } from '../src/cli/actions/discover'
 import discover from '../src/index'
 
-vi.mock('../src/index', () => ({ default: vi.fn() }))
-vi.mock('c12', () => ({ loadConfig: vi.fn() }))
+vi.mock('../src/index', () => ({
+  default: vi.fn(),
+}))
+vi.mock('c12', () => ({
+  loadConfig: vi.fn(),
+}))
 
 const discovered = vi.mocked(discover)
 const loaded = vi.mocked(loadConfig)
@@ -25,7 +29,9 @@ function lastLoadOptions() {
 beforeEach(() => {
   discovered.mockClear()
   loaded.mockReset()
-  loaded.mockResolvedValue({ config: { baseUrl: 'https://api.example.com', probes: {} } } as never)
+  loaded.mockResolvedValue({
+    config: { baseUrl: 'https://api.example.com', probes: {} },
+  } as never)
   process.exitCode = 0
 })
 
@@ -83,7 +89,9 @@ describe('runFromArgs', () => {
   it('should treat openapi-typescript as openapi with typescript output', async () => {
     await runFromArgs({ path: 'https://api.example.com', generate: 'openapi-typescript' })
 
-    expect(lastConfig().generate).toMatchObject({ openapi: { typescript: true } })
+    expect(lastConfig().generate).toMatchObject({
+      openapi: { typescript: true },
+    })
   })
 
   it('should not run without an endpoint', async () => {
@@ -107,7 +115,9 @@ describe('runFromConfig', () => {
   it('should load a config file from a directory', async () => {
     await runFromConfig({ configPath: 'examples/jsonplaceholder' })
 
-    expect(lastLoadOptions()).toMatchObject({ cwd: resolve('examples/jsonplaceholder') })
+    expect(lastLoadOptions()).toMatchObject({
+      cwd: resolve('examples/jsonplaceholder'),
+    })
     expect(lastLoadOptions().configFile).toBeUndefined()
     expect(discovered).toHaveBeenCalledTimes(1)
   })
@@ -139,7 +149,9 @@ describe('runFromCliArgs', () => {
   it('should treat a positional non-URL as a config location', async () => {
     await runFromCliArgs({ configPath: 'examples/jsonplaceholder' })
 
-    expect(lastLoadOptions()).toMatchObject({ cwd: resolve('examples/jsonplaceholder') })
+    expect(lastLoadOptions()).toMatchObject({
+      cwd: resolve('examples/jsonplaceholder'),
+    })
     expect(discovered).toHaveBeenCalledTimes(1)
   })
 
@@ -152,7 +164,9 @@ describe('runFromCliArgs', () => {
   it('should fall back to the config in the working directory', async () => {
     await runFromCliArgs({})
 
-    expect(lastLoadOptions()).toMatchObject({ cwd: process.cwd() })
+    expect(lastLoadOptions()).toMatchObject({
+      cwd: process.cwd(),
+    })
     expect(lastLoadOptions().configFile).toBeUndefined()
     expect(discovered).toHaveBeenCalledTimes(1)
   })

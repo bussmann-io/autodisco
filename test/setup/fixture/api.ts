@@ -108,7 +108,9 @@ export default function createTestAPI(port = 3456) {
       res.end(JSON.stringify([
         {
           type: 'ignore',
-          counts: [{ count: 5, value: 'red' }],
+          counts: [
+            { count: 5, value: 'red' },
+          ],
           field_name: 'color',
           stats: { total_values: 1 },
         },
@@ -122,7 +124,9 @@ export default function createTestAPI(port = 3456) {
           type: 'range',
           field_name: 'weight',
           stats: { max: 50, min: 5, total_values: 3 },
-          counts: [{ count: 2, value: 'medium' }],
+          counts: [
+            { count: 2, value: 'medium' },
+          ],
           scores: 15,
         },
       ]))
@@ -143,13 +147,17 @@ export default function createTestAPI(port = 3456) {
           field_name: 'stock',
           type: 'range',
           stats: { min: 0, max: 50, total_values: 8 },
-          counts: [{ count: 3, value: 'in-stock' }],
+          counts: [
+            { count: 3, value: 'in-stock' },
+          ],
         },
         {
           field_name: 'manufacturer',
           type: 'ignore',
           stats: { total_values: 4 },
-          counts: [{ count: 2, value: 'acme' }],
+          counts: [
+            { count: 2, value: 'acme' },
+          ],
         },
       ]))
       return
@@ -164,19 +172,27 @@ export default function createTestAPI(port = 3456) {
           kind: 'document',
           found: 10,
           llm: false,
-          hits: [{ highlighted: { id: 'p1', type: 'ProductDataType' } }],
+          hits: [
+            {
+              highlighted: { id: 'p1', type: 'ProductDataType' },
+            },
+          ],
         },
         {
           kind: 'facet.a',
           found: 2,
           field_name: 'a',
-          hits: [{ highlighted: 'A', count: 2, value: 'A' }],
+          hits: [
+            { highlighted: 'A', count: 2, value: 'A' },
+          ],
         },
         {
           kind: 'facet.b',
           found: 3,
           field_name: 'b',
-          hits: [{ highlighted: 'B', count: 3, value: 'B' }],
+          hits: [
+            { highlighted: 'B', count: 3, value: 'B' },
+          ],
         },
       ]))
       return
@@ -186,9 +202,24 @@ export default function createTestAPI(port = 3456) {
     if (method === 'GET' && url.startsWith('/suggest')) {
       res.writeHead(200)
       res.end(JSON.stringify([
-        { type: 'product', productId: 'prod-1', name: 'Laptop', price: { currency: 'USD', amount: 999.99 } },
-        { type: 'product', productId: 'prod-2', name: 'Mouse', price: { currency: 'USD', amount: 29.99 } },
-        { type: 'product', productId: 'prod-3', name: 'Keyboard', price: { currency: 'USD', amount: 69.99 } },
+        {
+          type: 'product',
+          productId: 'prod-1',
+          name: 'Laptop',
+          price: { currency: 'USD', amount: 999.99 },
+        },
+        {
+          type: 'product',
+          productId: 'prod-2',
+          name: 'Mouse',
+          price: { currency: 'USD', amount: 29.99 },
+        },
+        {
+          type: 'product',
+          productId: 'prod-3',
+          name: 'Keyboard',
+          price: { currency: 'USD', amount: 69.99 },
+        },
         { type: 'category', categoryId: 'cat-1', name: 'Computers' },
         { type: 'category', categoryId: 'cat-2', name: 'Accessories' },
         { type: 'category', categoryId: 'cat-3', name: 'Keyboards' },
@@ -209,7 +240,10 @@ export default function createTestAPI(port = 3456) {
     // GET /mixed-obj - Array of an object and a number (tests that non-object elements are kept)
     if (method === 'GET' && url === '/mixed-obj') {
       res.writeHead(200)
-      res.end(JSON.stringify([{ a: 1 }, 2]))
+      res.end(JSON.stringify([
+        { a: 1 },
+        2,
+      ]))
       return
     }
 
@@ -223,7 +257,9 @@ export default function createTestAPI(port = 3456) {
     // GET /nested-null-first - Object with a nested array whose first element is null
     if (method === 'GET' && url === '/nested-null-first') {
       res.writeHead(200)
-      res.end(JSON.stringify({ items: [null, 'a'] }))
+      res.end(JSON.stringify({
+        items: [null, 'a'],
+      }))
       return
     }
 

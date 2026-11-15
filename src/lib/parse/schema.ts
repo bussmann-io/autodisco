@@ -111,7 +111,10 @@ function merge(schemas: z.ZodType[]): z.ZodType {
     for (const [key, value] of Object.entries(schema.shape)) {
       const zodValue = value as z.ZodTypeAny
       if (!allProperties.has(key)) {
-        allProperties.set(key, { schemas: [zodValue], count: 1 })
+        allProperties.set(key, {
+          schemas: [zodValue],
+          count: 1,
+        })
       }
       else {
         const prop = allProperties.get(key)!
@@ -146,7 +149,9 @@ function merge(schemas: z.ZodType[]): z.ZodType {
     }
 
     const shouldBeOptional = count !== objectSchemas.length || hasOptionalVariant
-    mergedShape[key] = shouldBeOptional ? mergedProp.optional() : mergedProp
+    mergedShape[key] = shouldBeOptional
+      ? mergedProp.optional()
+      : mergedProp
   }
 
   return z.object(mergedShape)
