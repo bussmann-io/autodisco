@@ -45,7 +45,7 @@ function unwrapOptionalSchema(schema: z.ZodTypeAny): z.ZodTypeAny {
  * @returns An array of Zod schemas representing the flattened union members
  */
 function flattenUnionMembers(schema: z.ZodTypeAny): z.ZodTypeAny[] {
-  if (schema instanceof z.ZodUnion) {
+  if (schema instanceof z.ZodUnion && !(schema instanceof z.ZodDiscriminatedUnion)) {
     return schema._zod.def.options.flatMap(option => flattenUnionMembers(option as z.ZodTypeAny))
   }
 
@@ -95,12 +95,50 @@ function dedupeSchemas(schemas: z.ZodTypeAny[]): z.ZodTypeAny[] {
  * ```
  */
 function merge(schemas: z.ZodType[]): z.ZodType {
-  const objectSchemas = schemas.filter(schema => schema instanceof z.ZodObject) as z.ZodObject<any>[]
+  let members = dedupeSchemas(schemas.flatMap(flattenUnionMembers))
 
-  if (objectSchemas.length === 0) {
-    return schemas[0] || z.unknown()
+  const informative = members.filter(schema => !(schema instanceof z.ZodAny))
+
+  if (informative.length > 0) {
+    members = informative
   }
 
+  if (members.length <= 1) {
+    return members[0] || z.unknown()
+  }
+
+  const objectSchemas = members.filter(schema => schema instanceof z.ZodObject) as z.ZodObject<any>[]
+  const arraySchemas = members.filter(schema => schema instanceof z.ZodArray) as z.ZodArray<any>[]
+
+  const merged: z.ZodType[] = []
+
+  for (const member of members) {
+    if (member === objectSchemas[0]) {
+      merged.push(mergeObjects(objectSchemas))
+    }
+    else if (member === arraySchemas[0]) {
+      merged.push(z.array(merge(arraySchemas.map(schema => schema.element))))
+    }
+    else if (!(member instanceof z.ZodObject) && !(member instanceof z.ZodArray)) {
+      merged.push(member)
+    }
+  }
+
+  if (merged.length === 1) {
+    return merged[0]!
+  }
+
+  return z.union(merged as [z.ZodType, z.ZodType, ...z.ZodType[]])
+}
+
+/**
+ * Merges multiple Zod object schemas into one, marking properties missing from some objects as optional
+ *
+ * @param objectSchemas Array of Zod object schemas to merge
+ *
+ * @returns Merged Zod object schema
+ */
+function mergeObjects(objectSchemas: z.ZodObject<any>[]): z.ZodObject<any> {
   if (objectSchemas.length === 1) {
     return objectSchemas[0]!
   }
@@ -127,26 +165,8 @@ function merge(schemas: z.ZodType[]): z.ZodType {
   const mergedShape: Record<string, z.ZodTypeAny> = {}
 
   for (const [key, { schemas: propSchemas, count }] of allProperties) {
-    let mergedProp: z.ZodTypeAny
     const hasOptionalVariant = propSchemas.some(isOptionalSchema)
-    const normalizedSchemas = dedupeSchemas(propSchemas
-      .map(unwrapOptionalSchema)
-      .flatMap(flattenUnionMembers))
-
-    const areAllObjects = normalizedSchemas.every(s => s instanceof z.ZodObject)
-
-    if (normalizedSchemas.length === 1) {
-      mergedProp = normalizedSchemas[0]!
-    }
-    else if (areAllObjects) {
-      mergedProp = merge(normalizedSchemas)
-    }
-    else if (normalizedSchemas.every(s => s instanceof z.ZodArray)) {
-      mergedProp = z.array(merge(normalizedSchemas.map(s => (s as z.ZodArray<any>).element).filter(Boolean)))
-    }
-    else {
-      mergedProp = z.union(normalizedSchemas as [z.ZodTypeAny, z.ZodTypeAny, ...z.ZodTypeAny[]])
-    }
+    const mergedProp = merge(propSchemas.map(unwrapOptionalSchema))
 
     const shouldBeOptional = count !== objectSchemas.length || hasOptionalVariant
     mergedShape[key] = shouldBeOptional
@@ -247,7 +267,12 @@ function inferArray(value: any[], options?: InferOptions): z.ZodArray {
 
   const discriminatorCandidates = new Set<string>()
 
-  for (const key of Object.keys(value[0]!)) {
+  const first = value[0]
+  const candidateKeys = first && typeof first === 'object' && !Array.isArray(first)
+    ? Object.keys(first)
+    : []
+
+  for (const key of candidateKeys) {
     if (value.every(item => item && typeof item === 'object' && key in item && typeof item[key] === 'string' && item[key] !== '')) {
       discriminatorCandidates.add(key)
     }
