@@ -1,7 +1,7 @@
 {
   "name": "autodisco",
   "type": "module",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "packageManager": "pnpm@12.21.0",
   "description": "Automatically generate OpenAPI schemas by probing RESTful APIs",
   "author": "Frederik Bußmann <frederik@bussmann.io>",
